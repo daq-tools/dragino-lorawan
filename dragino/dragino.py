@@ -87,14 +87,14 @@ class Dragino(LoRa):
             self.deveui = self.config.deveui
             self.appkey = self.config.appkey
         assert self.get_agc_auto_on() == 1
-        self.gps_serial = Serial(
-            self.config.gps_serial_port,
-            self.config.gps_baud_rate,
-            timeout=self.config.gps_serial_timeout)
-        self.gps_serial.flush()
+#        self.gps_serial = Serial(
+#            self.config.gps_serial_port,
+#            self.config.gps_baud_rate,
+#            timeout=self.config.gps_serial_timeout)
+#        self.gps_serial.flush()
         
-    def __del__(self):
-        self.gps_serial.close()
+#    def __del__(self):
+#        self.gps_serial.close()
 
     def _read_frame_count(self):
         """
