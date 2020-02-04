@@ -92,6 +92,9 @@ class Dragino(LoRa):
             self.config.gps_baud_rate,
             timeout=self.config.gps_serial_timeout)
         self.gps_serial.flush()
+        
+    def __del__(self):
+        self.gps_serial.close()
 
     def _read_frame_count(self):
         """
@@ -232,31 +235,31 @@ class Dragino(LoRa):
         """
         self.send_bytes(list(map(ord, str(message))))
 
-    def get_gps(self):
-        """
-            Get the GPS position from the dragino,
-            waits for the specified timeout and then gives up
-        """
-        start = datetime.utcnow()
-        end = start + timedelta(seconds=self.config.gps_wait_period)
-        self.logger.info(
-            "Waiting for %d seconds until %s", self.config.gps_wait_period, end)
-        msg = None
-
-        while datetime.utcnow() < end:
-            try:
-                # read the serial port, convert to a string
-                gps_data = self.gps_serial.readline().decode()
-            except UnicodeDecodeError:
-                #not yet got valid data from gps
-                continue
-            gps_data_arr = gps_data.split(",")
-            if gps_data_arr[0] == "$GPGGA": #It's a position string
-                #print(gps_data)
-                msg = pynmea2.parse(gps_data)
-                break
-        # this will be None if no message is decoded, otherwise it'll contain the information
-        return msg
+#    def get_gps(self):
+#        """
+#            Get the GPS position from the dragino,
+#            waits for the specified timeout and then gives up
+#        """
+#        start = datetime.utcnow()
+#        end = start + timedelta(seconds=self.config.gps_wait_period)
+#        self.logger.info(
+#            "Waiting for %d seconds until %s", self.config.gps_wait_period, end)
+#        msg = None
+#
+#        while datetime.utcnow() < end:
+#            try:
+#                # read the serial port, convert to a string
+#                gps_data = self.gps_serial.readline().decode()
+#            except UnicodeDecodeError:
+#                #not yet got valid data from gps
+#                continue
+#            gps_data_arr = gps_data.split(",")
+#            if gps_data_arr[0] == "$GPGGA": #It's a position string
+#                #print(gps_data)
+#                msg = pynmea2.parse(gps_data)
+#                break
+#        # this will be None if no message is decoded, otherwise it'll contain the information
+#        return msg
 
 class DraginoError(Exception):
     """
