@@ -24,7 +24,7 @@ See: https://www.lora-alliance.org/portals/0/specs/LoRaWAN%20Specification%201R0
     5. Reboot the Pi `sudo reboot`
     6. Check that the new cs lines are enabled `ls /dev/spidev0.*` should output `/dev/spidev0.0  /dev/spidev0.1  /dev/spidev0.2`.  In which case the required SPI CS line now exists
 7. Create a new device in The Things Network console and copy the details into the config file
-8. Run the test programm `./test.py` and the device should transmit on the things network using OTAA authentication
+8. Run the test programm `./test.py` and the device should transmit on the things network using ABP authentication
 
 ## Additional Chip Select Details
 For some reason the Dragino board does not use one of the standard chip select lines for the SPI communication.  This can be overcome by using a device tree overlay to configure addtional SPI CS lines.  I am not a device tree expert so I adapted the example given at https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=157994 to provide the code needed for this to work.  
