@@ -21,8 +21,6 @@ from datetime import datetime, timedelta
 import logging
 import os.path
 from configobj import ConfigObj
-from serial import Serial
-import pynmea2
 from .SX127x.LoRa import LoRa, MODE
 from .SX127x.board_config import BOARD
 from .LoRaWAN import new as lorawan_msg
@@ -247,10 +245,6 @@ class DraginoConfig(object):
         self.logger.setLevel(log_level)
         try:
             config = ConfigObj(config_file)
-            self.gps_baud_rate = int(config["gps_baud_rate"])
-            self.gps_serial_port = config["gps_serial_port"]
-            self.gps_serial_timeout = int(config["gps_serial_timeout"])
-            self.gps_wait_period = int(config["gps_wait_period"])
             self.spreading_factor = int(config["spreading_factor"])
             self.max_power = int(config["max_power"], 16)
             self.output_power = int(config["output_power"], 16)
@@ -273,10 +267,6 @@ class DraginoConfig(object):
             else:
                 self.logger.critical("Unsupported auth mode chosen: %s", auth)
                 raise DraginoError("Unsupported auth mode")
-            self.logger.debug("GPS Baud Rate: %d", self.gps_baud_rate)
-            self.logger.debug("GPS Serial Port: %s", self.gps_serial_port)
-            self.logger.debug("GPS Serial Timeout: %s", self.gps_serial_timeout)
-            self.logger.debug("GPS Wait Period: %d", self.gps_wait_period)
             self.logger.debug("Spreading factor: %d", self.spreading_factor)
             self.logger.debug("Max Power: %02X", self.max_power)
             self.logger.debug("Output Power: %02X", self.output_power)

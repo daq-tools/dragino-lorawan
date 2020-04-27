@@ -1,9 +1,3 @@
-#GPS configuration
-gps_baud_rate = 9600
-gps_serial_port = "/dev/serial0"
-gps_serial_timeout = 1
-gps_wait_period = 10
-
 #LoRaWAN configuration
 spreading_factor = 7
 max_power = "0x0F"
