@@ -20,6 +20,7 @@ from random import randrange
 from datetime import datetime, timedelta
 import logging
 import os.path
+import binascii
 from configobj import ConfigObj
 from .SX127x.LoRa import LoRa, MODE
 from .SX127x.board_config import BOARD
@@ -39,7 +40,7 @@ class Dragino(LoRa):
         Class to provide an interface to the dragino LoRa/GPS HAT
     """
     def __init__(
-            self, config_filename, freqs=LORA_FREQS,
+            self, config, freqs=LORA_FREQS,
             logging_level=DEFAULT_LOG_LEVEL,
             lora_retries=DEFAULT_RETRIES):
         """
@@ -61,7 +62,10 @@ class Dragino(LoRa):
         self.appkey = None
         self.appeui = None
         self.deveui = None
-        self.config = DraginoConfig(config_filename, logging_level)
+        if isinstance(config, object):
+            self.config = config
+        else:
+            self.config = DraginoFileConfig(config, logging_level)
         self.lora_retries = lora_retries
         self._read_frame_count()
         self.set_mode(MODE.SLEEP)
@@ -231,7 +235,7 @@ class DraginoError(Exception):
     """
     pass
 
-class DraginoConfig(object):
+class DraginoFileConfig(object):
     """
         Reads an ini file containing the configuration for the dragino board
     """
@@ -298,3 +302,53 @@ class DraginoConfig(object):
             new_arr.append(int(item, 16))
         self.logger.debug("Converted %d/%d items", len(new_arr), len(arr))
         return new_arr
+
+
+class LoRaWANAuthentication:
+    """
+    Represents a pure-Python configuration object for LoRaWAN authentication.
+    """
+
+    def __init__(self, auth_mode=None, devaddr=None, nwskey=None, appskey=None, deveui=None, appeui=None, appkey=None):
+
+        # Authentication mode (ABP or OTAA)
+        self.auth_mode = auth_mode
+
+        # ABP
+        self.devaddr = devaddr
+        self.nwskey = nwskey
+        self.appskey = appskey
+
+        # OTAA
+        self.deveui = deveui
+        self.appeui = appeui
+        self.appkey = appkey
+
+
+class LoRaWANConfig:
+    """
+    Represents a pure-Python configuration object for LoRaWAN.
+    """
+    def __init__(self, auth: LoRaWANAuthentication=None, spreading_factor=7, max_power=0x0F, output_power=0x0E, sync_word=0x34, rx_crc=True, fcount_filename=".lora_fcount"):
+
+        if auth.auth_mode.upper() == "ABP":
+            self.auth = AUTH_ABP
+            self.devaddr = self._convert_address(auth.devaddr)
+            self.nwskey = self._convert_address(auth.nwskey)
+            self.appskey = self._convert_address(auth.appskey)
+
+        elif auth.auth_mode.upper() == "OTAA":
+            self.auth = AUTH_OTAA
+            self.deveui = self._convert_address(auth.deveui)
+            self.appeui = self._convert_address(auth.appeui)
+            self.appkey = self._convert_address(auth.appkey)
+
+        self.spreading_factor = spreading_factor
+        self.max_power = max_power
+        self.output_power = output_power
+        self.sync_word = sync_word
+        self.rx_crc = rx_crc
+        self.fcount_filename = fcount_filename
+
+    def _convert_address(self, address):
+        return list(binascii.unhexlify(address))
