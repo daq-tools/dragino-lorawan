@@ -17,11 +17,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from random import randrange
-from datetime import datetime, timedelta
 import logging
 import os.path
 import binascii
-from configobj import ConfigObj
 from .SX127x.LoRa import LoRa, MODE
 from .SX127x.board_config import BOARD
 from .LoRaWAN import new as lorawan_msg
@@ -247,6 +245,8 @@ class DraginoFileConfig(object):
         logging.basicConfig(
             format='%(asctime)s - %(name)s - %(lineno)d - %(levelname)s - %(message)s')
         self.logger.setLevel(log_level)
+
+        from configobj import ConfigObj
         try:
             config = ConfigObj(config_file)
             self.spreading_factor = int(config["spreading_factor"])
