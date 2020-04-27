@@ -27,7 +27,7 @@ from .SX127x.board_config import BOARD
 from .LoRaWAN import new as lorawan_msg
 from .LoRaWAN import MalformedPacketException
 from .LoRaWAN.MHDR import MHDR
-from .FrequncyPlan import LORA_FREQS
+from .FrequencyPlan import LORA_FREQS
 
 DEFAULT_LOG_LEVEL = logging.WARN #Change after finishing development
 DEFAULT_RETRIES = 3 # How many attempts to send the message
