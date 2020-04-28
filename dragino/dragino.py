@@ -27,7 +27,7 @@ from .LoRaWAN.MalformedPacketException import MalformedPacketException
 from .LoRaWAN.MHDR import MHDR
 from .FrequencyPlan import LORA_FREQS
 
-DEFAULT_LOG_LEVEL = logging.WARN #Change after finishing development
+DEFAULT_LOG_LEVEL = logging.WARNING #Change after finishing development
 DEFAULT_RETRIES = 3 # How many attempts to send the message
 
 AUTH_ABP = "ABP"
