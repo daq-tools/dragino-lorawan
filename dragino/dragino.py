@@ -23,7 +23,7 @@ import binascii
 from .SX127x.LoRa import LoRa, MODE
 from .SX127x.board_config import BOARD
 from .LoRaWAN import new as lorawan_msg
-from .LoRaWAN import MalformedPacketException
+from .LoRaWAN.MalformedPacketException import MalformedPacketException
 from .LoRaWAN.MHDR import MHDR
 from .FrequencyPlan import LORA_FREQS
 
