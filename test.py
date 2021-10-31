@@ -5,12 +5,22 @@
 
     cache.json will be created if it doesn't exist
 """
+
+# Make it possible to run the program on non-SBC machines.
+import os
+if "NOSBC" in os.environ:
+    import mock_sbc
+    mock_sbc.enable()
+else:
+    import RPi.GPIO as GPIO
+    GPIO.setwarnings(False)
+
 import logging
 from time import sleep
-import RPi.GPIO as GPIO
 from dragino import Dragino
 
-GPIO.setwarnings(False)
+if "NOSBC" in os.environ:
+    mock_sbc.monkeypatch_sx127x_post()
 
 # add logfile
 logLevel=logging.DEBUG
