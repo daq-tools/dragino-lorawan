@@ -61,7 +61,7 @@ class MAC_commands(object):
 
         if config is None:
             self.logger.error("config is None")
-            exit()
+            raise RuntimeError("Unable to work without configuration")
             
         self.config=config
 
