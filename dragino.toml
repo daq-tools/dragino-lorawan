@@ -3,6 +3,10 @@
 # see cache.json for dynamically changing values and TTN keys
 
 [GPSD]
+	# Disable GPS feature.
+	# enabled=false
+
+	# Adjust threading.
 	threaded=true		# non-blocking operation get_gps() will return last cached valid reading
 	threadLoopDelay=0.5	# number of seconds to check GPS for a valid reading
 

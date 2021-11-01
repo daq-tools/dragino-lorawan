@@ -32,7 +32,6 @@ from .MAChandler import MAC_commands
 from .Config import TomlConfig
 from .Strings import *
 import threading
-from .GPShandler import GPS
 
 
 # Dragino.py is called from classes in the
@@ -130,7 +129,10 @@ class Dragino(LoRa):
         self.txStart=None          # used to compute last airTime
         self.txEnd=None
 
-        self.GPS=GPS(logging_level,self.config[GPSD]["threaded"],self.config[GPSD]["threadLoopDelay"])
+        self.gpsd_enabled = self.config[GPSD].get("enabled", True)
+        if self.gpsd_enabled:
+            from .GPShandler import GPS
+            self.GPS=GPS(logging_level,self.config[GPSD]["threaded"],self.config[GPSD]["threadLoopDelay"])
 
         self.logger.info("__init__ done")
 
@@ -662,10 +664,15 @@ class Dragino(LoRa):
         self.send_bytes(list(map(ord, str(message))),port)
 
     def get_gps(self):
+        if not self.gpsd_enabled:
+            raise RuntimeError("GPSD support disabled per configuration")
         return self.GPS.get_gps()
 
     def get_corrected_timestamp(self):
+        if not self.gpsd_enabled:
+            raise RuntimeError("GPSD support disabled per configuration")
         return self.GPS.get_corrected_timestamp()
 
     def stop(self):
-        self.GPS.stop()
+        if self.gpsd_enabled:
+            self.GPS.stop()
