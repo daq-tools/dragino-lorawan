@@ -4,7 +4,7 @@
 
 [GPSD]
 	# Disable GPS feature.
-	# enabled=false
+	enabled=false
 
 	# Adjust threading.
 	threaded=true		# non-blocking operation get_gps() will return last cached valid reading
