@@ -45,6 +45,17 @@ class TomlConfig:
         Retries=A.["LoraWan"]["Retries"]
 
         """
+
+        def convert_address(address):
+            return list(binascii.unhexlify(address))
+
+        for auth_mode in [AUTH_OTAA, AUTH_ABP]:
+            for item in [APPKEY, APPEUI, DEVEUI]:
+                value=self.config[TTN][auth_mode][item]
+                if isinstance(value, str):
+                    value=convert_address(value)
+                self.config[TTN][auth_mode][item]=value
+
         return self.config
 
 
